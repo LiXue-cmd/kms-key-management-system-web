@@ -11,7 +11,8 @@ export function useCustomize() {
   const isDark = color === 'dark'
   const config = useCookie<Config>('config', {
     default: () => ({
-      theme: 'zinc',
+      theme: 'stone',
+      // theme: 'zinc',
       radius: 0.5,
     }),
   })

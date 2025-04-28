@@ -62,6 +62,7 @@ function backgroundColor(color: Color) {
 }
 
 const colorMode = useColorMode()
+colorMode.preference = 'light'
 </script>
 
 <template>

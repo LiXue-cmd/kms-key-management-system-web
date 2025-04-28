@@ -26,33 +26,33 @@ export const navMenu: NavMenu[] = [
     heading: 'Pages',
     items: [
       {
-        title: 'Authentication',
+        title: '身份验证',
         icon: 'i-lucide-lock-keyhole-open',
         children: [
+          // {
+          //   title: 'Login',
+          //   icon: 'i-lucide-circle',
+          //   link: '/login',
+          // },
           {
-            title: 'Login',
-            icon: 'i-lucide-circle',
-            link: '/login',
-          },
-          {
-            title: 'Login Basic',
+            title: '标准登录页面',
             icon: 'i-lucide-circle',
             link: '/login-basic',
           },
-          {
-            title: 'Register',
-            icon: 'i-lucide-circle',
-            link: '/register',
-          },
-          {
-            title: 'Forgot Password',
-            icon: 'i-lucide-circle',
-            link: '/forgot-password',
-          },
+          // {
+          //   title: 'Register',
+          //   icon: 'i-lucide-circle',
+          //   link: '/register',
+          // },
+          // {
+          //   title: 'Forgot Password',
+          //   icon: 'i-lucide-circle',
+          //   link: '/forgot-password',
+          // },
         ],
       },
       {
-        title: 'Errors',
+        title: '报错提示页',
         icon: 'i-lucide-triangle-alert',
         children: [
           {
@@ -83,7 +83,7 @@ export const navMenu: NavMenu[] = [
         ],
       },
       {
-        title: 'Settings',
+        title: '设置',
         icon: 'i-lucide-settings',
         new: true,
         children: [
@@ -120,7 +120,7 @@ export const navMenu: NavMenu[] = [
     heading: 'Components',
     items: [
       {
-        title: 'Components',
+        title: '组件',
         icon: 'i-lucide-component',
         children: [
           {
