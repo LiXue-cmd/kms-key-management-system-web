@@ -2,23 +2,37 @@
 import { Loader2 } from 'lucide-vue-next'
 import PasswordInput from '~/components/PasswordInput.vue'
 
+import { ref } from 'vue'
+import { useUserStore } from '~/store/user'
+
 const email = ref('demo@gmail.com')
 const password = ref('password')
 const isLoading = ref(false)
+const userStore = useUserStore()
 
-function onSubmit(event: Event) {
+const onSubmit = async (event: Event) => {
+// async onSubmit(event: Event) =>{
   event.preventDefault()
   if (!email.value || !password.value)
     return
 
   isLoading.value = true
 
-  setTimeout(() => {
-    if (email.value === 'demo@gmail.com' && password.value === 'password')
-      navigateTo('/')
-
+  try {
+    // await userStore.login({ email: email.value, password: password.value })
+    navigateTo('/')
     isLoading.value = false
-  }, 3000)
+  } catch (error) {
+    console.error('Login failed', error)
+    isLoading.value = false
+    // 显示错误信息
+  }
+  // setTimeout(() => {
+  //   if (email.value === 'demo@gmail.com' && password.value === 'password')
+  //     navigateTo('/')
+
+  //   isLoading.value = false
+  // }, 3000)
 }
 </script>
 

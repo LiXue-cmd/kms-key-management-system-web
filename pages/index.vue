@@ -2,6 +2,12 @@
 import NumberFlow from '@number-flow/vue'
 import { Activity, CreditCard, DollarSign, Users } from 'lucide-vue-next'
 
+// import { useAuth } from 'nuxt-authorization/composables/useAuth'
+// 从 Nuxt 的自动导入系统导入
+import { useAuth } from '#imports'
+
+const { isAuthorized, isAuthenticated } = useAuth()
+
 const dataCard = ref({
   totalRevenue: 0,
   totalRevenueDesc: 0,
@@ -57,6 +63,28 @@ onMounted(() => {
 
 <template>
   <div class="w-full flex flex-col gap-4">
+
+    <!-- 仅管理员可见 -->
+    <div v-if="isAuthorized('admin')">
+      <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
+        <p class="text-blue-700">You are an administrator. You can manage all settings.</p>
+      </div>
+    </div>
+    
+    <!-- 编辑可见的设置 -->
+    <div v-if="isAuthorized('editor') || isAuthorized('admin')">
+      <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
+        <p class="text-green-700">You can manage content settings.</p>
+      </div>
+    </div>
+    
+    <!-- 所有已登录用户可见 -->
+    <div v-if="isAuthenticated">
+      <div class="bg-gray-50 border-l-4 border-gray-400 p-4">
+        <p class="text-gray-700">You can manage your profile settings.</p>
+      </div>
+    </div>
+
     <div class="flex flex-wrap items-center justify-between gap-2">
       <h2 class="text-2xl font-bold tracking-tight">
         Dashboard
