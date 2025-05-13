@@ -26,6 +26,9 @@ export default defineNuxtConfig({
       home: '/'
     }
   },
+  app: {
+    middleware: ['auth-server'] // 改为连字符形式
+  },
 
   css: [
     '@unocss/reset/tailwind.css',
@@ -51,11 +54,11 @@ export default defineNuxtConfig({
     '/settings': { redirect: '/settings/profile' },
     // '/login': { redirect: '/login' },
 
-     '/': { redirect: '/login' },
-    '/login': { redirect: '/', condition: (to, from) => {
-      const { user } = useAuthorization()
-      return user
-    } }
+    //  '/': { redirect: '/login' },
+    // '/login': { redirect: '/', condition: (to, from) => {
+    //   const { user } = useAuthorization()
+    //   return user
+    // } }
   },
 
   imports: {

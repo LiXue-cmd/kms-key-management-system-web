@@ -24,7 +24,7 @@ function onSubmit(event: Event) {
   //   isLoading.value = false
   // }, 3000)
    if (user) {
-    router.push('/dashboard')
+    router.push('/')
   } else {
     // 确保这里不会循环重定向到登录页
     console.log('请先登录')
