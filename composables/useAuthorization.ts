@@ -45,6 +45,8 @@ export const useAuthorization = () => {
   // 清除用户信息（登出）
   const clearUser = () => {
     user.value = null
+    // 在实际项目中，还应清除cookie或session
+    navigateTo('/login');
   }
 
   return {

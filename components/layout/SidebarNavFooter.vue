@@ -11,7 +11,9 @@ defineProps<{
 
 const { isMobile, setOpenMobile } = useSidebar()
 
-function handleLogout() {
+function handleLogout() {  
+  const { clearUser } = useAuthorization()
+  clearUser()
   navigateTo('/login')
 }
 

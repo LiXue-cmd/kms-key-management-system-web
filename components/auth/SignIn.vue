@@ -2,32 +2,44 @@
 import { Loader2 } from 'lucide-vue-next'
 import PasswordInput from '~/components/PasswordInput.vue'
 
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthorization } from '~/composables/useAuthorization';
 
-const email = ref('demo@gmail.com')
-const password = ref('password')
+const email = ref('');
+const password = ref('');
+const error = ref('');
+const router = useRouter();
+const { setUser } = useAuthorization();
 const isLoading = ref(false)
 
-const { user } = useAuthorization()
-const router = useRouter()
+const onSubmit = async () => {
+  isLoading.value = true;
+  try {
+    // 调用登录API
+    const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email: email.value, password: password.value }),
+    });
 
-function onSubmit(event: Event) {
-  event.preventDefault()
-  // if (!email.value || !password.value)
-  //   return
+    if (!response.ok) {
+      isLoading.value = false;
+      throw new Error('登录失败，请检查凭证');
+    }
 
-  // isLoading.value = true
+    const user = await response.json();
+    // 设置用户信息到授权模块
+    setUser(user);
 
-  // setTimeout(() => {
-  //   if (email.value === 'demo@gmail.com' && password.value === 'password')
-  //     navigateTo('/')
-
-  //   isLoading.value = false
-  // }, 3000)
-   if (user) {
-    router.push('/')
-  } else {
-    // 确保这里不会循环重定向到登录页
-    console.log('请先登录')
+    isLoading.value = false;
+    // 重定向到首页或之前的页面
+    router.push('/');
+  } catch (err: any) {
+    isLoading.value = false;
+    error.value = err.message || '登录过程中发生错误';
   }
 }
 </script>
@@ -38,27 +50,16 @@ function onSubmit(event: Event) {
       <Label for="email">
         账号
       </Label>
-      <Input
-        id="email"
-        v-model="email"
-        type="text"
-        placeholder="请输入账号"
-        :disabled="isLoading"
-        auto-capitalize="none"
-        auto-complete="email"
-        auto-correct="off"
-      />
+      <Input id="email" v-model="email" type="text" placeholder="请输入账号" :disabled="isLoading" auto-capitalize="none"
+        auto-complete="email" auto-correct="off" />
     </div>
     <div class="grid gap-2">
       <div class="flex items-center">
         <Label for="password">
           密码
         </Label>
-        <NuxtLink
-          to="/forgot-password"
-          class="ml-auto inline-block text-sm underline"
-        >
-         忘记密码?
+        <NuxtLink to="/forgot-password" class="ml-auto inline-block text-sm underline">
+          忘记密码?
         </NuxtLink>
       </div>
       <PasswordInput id="password" v-model="password" />
@@ -76,6 +77,4 @@ function onSubmit(event: Event) {
   </div> -->
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

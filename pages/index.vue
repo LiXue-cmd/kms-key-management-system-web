@@ -49,6 +49,8 @@ const dataRecentSales = [
 definePageMeta({
   middleware: 'auth', // 使用内置认证中间件
   // middleware: 'auth-server', // 使用内置认证中间件
+  requiresAuth: true,
+  requiresAdmin: true,
   auth: {
     roles: ['admin'], // 仅允许管理员访问
     redirect: '/login'
