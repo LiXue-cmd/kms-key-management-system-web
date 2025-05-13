@@ -37,7 +37,7 @@ export const navMenu: NavMenu[] = [
           {
             title: '标准登录页面',
             icon: 'i-lucide-circle',
-            link: '/login-basic',
+            link: '/login',
           },
           // {
           //   title: 'Register',

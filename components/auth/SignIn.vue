@@ -2,23 +2,33 @@
 import { Loader2 } from 'lucide-vue-next'
 import PasswordInput from '~/components/PasswordInput.vue'
 
+
 const email = ref('demo@gmail.com')
 const password = ref('password')
 const isLoading = ref(false)
 
+const { user } = useAuthorization()
+const router = useRouter()
+
 function onSubmit(event: Event) {
   event.preventDefault()
-  if (!email.value || !password.value)
-    return
+  // if (!email.value || !password.value)
+  //   return
 
-  isLoading.value = true
+  // isLoading.value = true
 
-  setTimeout(() => {
-    if (email.value === 'demo@gmail.com' && password.value === 'password')
-      navigateTo('/')
+  // setTimeout(() => {
+  //   if (email.value === 'demo@gmail.com' && password.value === 'password')
+  //     navigateTo('/')
 
-    isLoading.value = false
-  }, 3000)
+  //   isLoading.value = false
+  // }, 3000)
+   if (user) {
+    router.push('/dashboard')
+  } else {
+    // 确保这里不会循环重定向到登录页
+    console.log('请先登录')
+  }
 }
 </script>
 

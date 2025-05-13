@@ -22,7 +22,7 @@ definePageMeta({
             <p class="text-center text-sm text-muted-foreground">
               已经注册账号？
               <NuxtLink
-                to="/login-basic"
+                to="/login"
                 class="underline underline-offset-4 hover:text-primary"
               >
                 去登录
