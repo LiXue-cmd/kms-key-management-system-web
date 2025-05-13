@@ -10,7 +10,22 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@pinia/nuxt',
     '@nuxtjs/color-mode',
+    'nuxt-authorization',
   ],
+
+  authorization: {
+    // 配置选项（可选）
+    roles: {
+      admin: ['manageUsers', 'managePosts'],
+      user: ['viewProfile', 'editProfile'],
+      guest: []
+    },
+    defaultRole: 'guest',
+    redirect: {
+      login: '/login',
+      home: '/'
+    }
+  },
 
   css: [
     '@unocss/reset/tailwind.css',
