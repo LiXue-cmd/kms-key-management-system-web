@@ -27,7 +27,8 @@ export default defineNuxtConfig({
     }
   },
   app: {
-    middleware: ['auth-server'] // 改为连字符形式
+    middleware: ['auth'] // 改为连字符形式
+    // middleware: ['auth-server'] // 改为连字符形式
   },
 
   css: [

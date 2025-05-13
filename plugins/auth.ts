@@ -25,26 +25,29 @@
 export default defineNuxtPlugin(async (nuxtApp) => {
   const { setUser } = useAuthorization()
 
+  // 构建绝对 URL
+  const baseUrl = window.location.origin;
+  const userUrl = `${baseUrl}/api/user`;
+
   try {
-    // 发送请求
-    const response = await fetch('/api/user')
-    
-    // 检查 HTTP 状态码
+    // 服务端使用useFetch
+    // const { data: user, error } = await useFetch('/api/user');
+    // if (error.value) {
+    //   throw new Error(`获取用户信息失败: ${error.value.message}`);
+    // }
+    // 客户端使用fetch
+    const response = await fetch(userUrl);
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
-    // 解析 JSON 数据
-    const user = await response.json()
-    console.log('user', user)
-    
+    const user = await response.json();
+    console.log('user', user);
     // 设置用户角色和权限
-    setUser(user)
+    setUser(user);
   } catch (error) {
-    console.error('获取用户信息失败:', error)
-    // 可以在这里设置默认用户状态或执行其他操作
+    console.error('获取用户信息失败:', error);
   }
-})
+});
 
 // export default defineNuxtPlugin({
 //   name: 'authorization-resolver',

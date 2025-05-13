@@ -1,4 +1,5 @@
 // middleware/auth.server.ts
+// 在服务端渲染时，从会话里获取用户信息并设置用户：
 export default defineNuxtRouteMiddleware(async (to, from) => {
   const { setUser, user } = useAuthorization()
   
