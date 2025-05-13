@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import NumberFlow from '@number-flow/vue'
 import { Activity, CreditCard, DollarSign, Users } from 'lucide-vue-next'
+const { hasRole, can } = useAuthorization()
+
+// 高级用法：基于资源的权限
+const post = ref({ id: 1, authorId: 123 })
+// const { can } = useAuthorization()
 
 const dataCard = ref({
   totalRevenue: 0,
@@ -41,6 +46,14 @@ const dataRecentSales = [
   },
 ]
 
+definePageMeta({
+  middleware: 'auth', // 使用内置认证中间件
+  auth: {
+    roles: ['admin'], // 仅允许管理员访问
+    redirect: '/login'
+  }
+})
+
 onMounted(() => {
   dataCard.value = {
     totalRevenue: 45231.89,
@@ -57,6 +70,14 @@ onMounted(() => {
 
 <template>
   <div class="w-full flex flex-col gap-4">
+    <!-- 仅管理员可见 -->
+    <button v-if="hasRole('admin')" @click="deletePost">Delete</button>
+    
+    <!-- 具有特定权限的用户可见 -->
+    <button v-if="can('editProfile')" @click="editProfile">Edit Profile</button>
+
+    <button v-if="can('edit', post)" @click="editPost">Edit</button>
+
     <div class="flex flex-wrap items-center justify-between gap-2">
       <h2 class="text-2xl font-bold tracking-tight">
         Dashboard
