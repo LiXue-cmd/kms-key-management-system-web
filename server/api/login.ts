@@ -4,8 +4,11 @@ import { setCookie } from 'h3';
 import jwt from 'jsonwebtoken';
 
 export default defineEventHandler(async (event) => {
+  // 使用 console.log 替换 alert
+  console.log('login', event); 
   const body = await readBody(event);
   const { email, password } = body;
+  console.log('Received email:', email, 'password:', password);
 
   // 实际项目中应查询数据库或调用认证服务
   if (email === 'admin@example.com' && password === 'password') {
@@ -48,10 +51,11 @@ export default defineEventHandler(async (event) => {
       maxAge: 3600,
       path: '/'
     });
-
+alert('登录成功',user)
     return user;
   }
 
+  console.log('body:', body);
   throw createError({
     statusCode: 401,
     statusMessage: '认证失败，无效的凭证'

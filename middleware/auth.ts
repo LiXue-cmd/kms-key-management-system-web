@@ -1,4 +1,4 @@
-// 在路由跳转时，检查用户是否登录以及是否具备管理员权限
+// 路由守卫，在路由跳转时，检查用户是否登录以及是否具备管理员权限
 // middleware/auth.ts
 export default defineNuxtRouteMiddleware((to, from) => {
   const { user } = useAuthorization();

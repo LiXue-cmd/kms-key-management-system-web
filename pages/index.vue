@@ -53,9 +53,9 @@ const dataRecentSales = [
   },
 ]
 
+// pages/index.vue
 definePageMeta({
   middleware: 'auth', // 使用内置认证中间件
-  // middleware: 'auth-server', // 使用内置认证中间件
   requiresAuth: true,
   requiresAdmin: true,
   auth: {

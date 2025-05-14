@@ -31,6 +31,16 @@ export default defineNuxtConfig({
     // middleware: ['auth-server'] // 改为连字符形式
   },
 
+  // 开发环境下的代理配置
+  nitro: {
+    devProxy: {
+      '/api': {
+        target: 'http://localhost:3000', // 你的 Nuxt 服务器地址
+        changeOrigin: true,
+      },
+    },
+  },
+  
   css: [
     '@unocss/reset/tailwind.css',
   ],
