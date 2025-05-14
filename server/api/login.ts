@@ -1,5 +1,7 @@
 // server/api/login.ts
 import { createError } from 'h3';
+import { setCookie } from 'h3';
+import jwt from 'jsonwebtoken';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
@@ -16,7 +18,37 @@ export default defineEventHandler(async (event) => {
       permissions: ['manageUsers', 'managePosts', 'accessDashboard']
     };
 
-    // 在实际项目中，这里应该生成并返回JWT或设置session
+    // 生成 JWT
+    const token = jwt.sign(user, 'your-secret-key', { expiresIn: '1h' });
+
+    // 设置 cookie
+    setCookie(event, 'token', token, {
+      httpOnly: true,
+      maxAge: 3600,
+      path: '/'
+    });
+
+    return user;
+  } else if (email === 'normaluser@example.com' && password === 'password') {
+    // 模拟普通用户数据
+    const user = {
+      id: 2,
+      name: 'Normal User',
+      email: 'normaluser@example.com',
+      role: 'normal-user',
+      permissions: ['viewProfile', 'editProfile']
+    };
+
+    // 生成 JWT
+    const token = jwt.sign(user, 'your-secret-key', { expiresIn: '1h' });
+
+    // 设置 cookie
+    setCookie(event, 'token', token, {
+      httpOnly: true,
+      maxAge: 3600,
+      path: '/'
+    });
+
     return user;
   }
 

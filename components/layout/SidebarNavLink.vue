@@ -1,34 +1,39 @@
-<script setup lang="ts">
-import type { SidebarMenuButtonVariants } from '~/components/ui/sidebar'
-import type { NavLink } from '~/types/nav'
-import { useSidebar } from '~/components/ui/sidebar'
-
-withDefaults(defineProps<{
-  item: NavLink
-  size?: SidebarMenuButtonVariants['size']
-}>(), {
-  size: 'default',
-})
-
-const { setOpenMobile } = useSidebar()
-</script>
-
 <template>
-  <SidebarMenu>
-    <SidebarMenuItem>
-      <SidebarMenuButton as-child :tooltip="item.title" :size="size">
-        <NuxtLink :to="item.link" @click="setOpenMobile(false)">
-          <Icon :name="item.icon || ''" mode="svg" />
-          <span>{{ item.title }}</span>
-          <span v-if="item.new" class="rounded-md bg-#adfa1d px-1.5 py-0.5 text-xs text-black leading-none no-underline group-hover:no-underline">
-            New
-          </span>
-        </NuxtLink>
-      </SidebarMenuButton>
-    </SidebarMenuItem>
-  </SidebarMenu>
+  <div>
+    <SidebarMenu>
+      <template v-for="menu in navMenu" :key="menu.heading">
+        <SidebarMenuHeading>{{ menu.heading }}</SidebarMenuHeading>
+        <template v-for="item in menu.items" :key="item.title">
+          <SidebarMenuItem v-if="!item.children">
+            <SidebarMenuLink :to="item.link">
+              <Icon :name="item.icon" class="mr-2 h-4 w-4" />
+              {{ item.title }}
+            </SidebarMenuLink>
+          </SidebarMenuItem>
+          <SidebarMenuSubmenu v-else>
+            <SidebarMenuSubmenuTrigger>
+              <Icon :name="item.icon" class="mr-2 h-4 w-4" />
+              {{ item.title }}
+            </SidebarMenuSubmenuTrigger>
+            <SidebarMenuSubmenuContent>
+              <template v-for="child in item.children" :key="child.title">
+                <SidebarMenuItem>
+                  <SidebarMenuLink :to="child.link">
+                    <Icon :name="child.icon" class="mr-2 h-4 w-4" />
+                    {{ child.title }}
+                  </SidebarMenuLink>
+                </SidebarMenuItem>
+              </template>
+            </SidebarMenuSubmenuContent>
+          </SidebarMenuSubmenu>
+        </template>
+      </template>
+    </SidebarMenu>
+  </div>
 </template>
 
-<style scoped>
+<script setup lang="ts">
+import { getNavMenu } from '~/constants/menus';
 
-</style>
+const navMenu = getNavMenu();
+</script>

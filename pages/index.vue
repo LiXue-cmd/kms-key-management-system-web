@@ -1,11 +1,18 @@
 <script setup lang="ts">
 import NumberFlow from '@number-flow/vue'
 import { Activity, CreditCard, DollarSign, Users } from 'lucide-vue-next'
-const { hasRole, can } = useAuthorization()
 
-// 高级用法：基于资源的权限
-const post = ref({ id: 1, authorId: 123 })
-// const { can } = useAuthorization()
+import { useAuthorization } from '~/composables/useAuthorization';
+
+const { can } = useAuthorization();
+
+const manageUsers = () => {
+  // 处理管理用户逻辑
+};
+
+const viewProfile = () => {
+  // 处理查看个人资料逻辑
+};
 
 const dataCard = ref({
   totalRevenue: 0,
@@ -73,13 +80,8 @@ onMounted(() => {
 
 <template>
   <div class="w-full flex flex-col gap-4">
-    <!-- 仅管理员可见 -->
-    <button v-if="hasRole('admin')" @click="deletePost">Delete</button>
-    
-    <!-- 具有特定权限的用户可见 -->
-    <button v-if="can('editProfile')" @click="editProfile">Edit Profile</button>
-
-    <button v-if="can('edit', post)" @click="editPost">Edit</button>
+     <Button v-if="can('manageUsers')" @click="manageUsers">Manage Users</Button>
+      <Button v-if="can('viewProfile')" @click="viewProfile">View Profile</Button>
 
     <div class="flex flex-wrap items-center justify-between gap-2">
       <h2 class="text-2xl font-bold tracking-tight">

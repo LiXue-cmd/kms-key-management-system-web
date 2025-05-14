@@ -1,29 +1,45 @@
+// plugins/auth.ts
+import { defineNuxtPlugin } from '#app';
+import { useAuthorization } from '~/composables/useAuthorization';
+import { navigateTo } from '#app';
+import { useRoute } from '#app';
+import { useCookie } from '#app';
+
 export default defineNuxtPlugin(async (nuxtApp) => {
-  const { setUser } = useAuthorization()
-
-  // 尝试从本地存储获取用户信息
-  const storedUser = localStorage.getItem('user');
-  if (storedUser) {
-    const user = JSON.parse(storedUser);
-    setUser(user);
-    return;
-  }
-
-  const baseUrl = window.location.origin;
-  const userUrl = `${baseUrl}/api/user`;
+  const { setUser } = useAuthorization();
+  const route = useRoute();
+  const token = useCookie('token');
 
   try {
-    const response = await fetch(userUrl);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const user = await response.json();
-    console.log('user', user);
-    setUser(user);
+    const { data: user, error } = await useFetch('/api/user', {
+      headers: {
+        Authorization: `Bearer ${token.value}`
+      }
+    });
 
-    // 将用户信息存储到本地存储
-    localStorage.setItem('user', JSON.stringify(user));
+    if (error.value) {
+      console.log('Response error:', error.value);
+      if (error.value.statusCode === 401 && route.path !== '/login') {
+        // 会话过期或无效，跳转到登录页
+        await navigateTo('/login');
+      }
+      throw new Error(`获取用户信息失败: ${error.value.message}`);
+    }
+
+    if (user.value) {
+      console.log('User information retrieved:', user.value);
+      setUser(user.value);
+    } else {
+      // 如果没有获取到用户信息，且当前页面不是登录页面，则跳转到登录页面
+      if (route.path !== '/login') {
+        await navigateTo('/login');
+      }
+    }
   } catch (error) {
     console.error('获取用户信息失败:', error);
+    // 捕获到错误时，且当前页面不是登录页面，则跳转到登录页面
+    if (route.path !== '/login') {
+      await navigateTo('/login');
+    }
   }
 });
