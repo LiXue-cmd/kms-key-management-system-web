@@ -1,65 +1,45 @@
 // server/api/login.ts
-import { createError } from 'h3';
-import { setCookie } from 'h3';
+import { createError, readBody, setCookie, send } from 'h3';
 import jwt from 'jsonwebtoken';
 
 export default defineEventHandler(async (event) => {
-  // 使用 console.log 替换 alert
-  console.log('login', event);
-  const body = await readBody(event);
-  const { email, password } = body;
-  alert('email', email)
-  alert('password', password)
-  console.log('Received email:', email, 'password:', password);
+  try {
+    const { email, password } = await readBody(event);
+    const user = validateUser(email, password);
+    
+    if (!user) {
+      throw createError({
+        statusCode: 401,
+        statusMessage: '认证失败，无效的凭证',
+      });
+    }
 
-  // 实际项目中应查询数据库或调用认证服务
-  if (email === 'admin@example.com' && password === 'password') {
-    // 模拟用户数据
-    const user = {
-      id: 1,
-      name: 'Admin User',
-      email: 'admin@example.com',
-      role: 'admin',
-      permissions: ['manageUsers', 'managePosts', 'accessDashboard']
-    };
-
-    // 生成 JWT
     const token = jwt.sign(user, 'your-secret-key', { expiresIn: '1h' });
+    setCookie(event, 'token', token, { httpOnly: true, maxAge: 3600 });
 
-    // 设置 cookie
-    setCookie(event, 'token', token, {
-      httpOnly: true,
-      maxAge: 3600,
-      path: '/'
+    // ✅ 使用完整的 send 函数形式
+    return send(event, JSON.stringify(user), {
+      statusCode: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
-
-    alert('登录成功', user)
-    return user;
-  } else if (email === 'normaluser@example.com' && password === 'password') {
-    // 模拟普通用户数据
-    const user = {
-      id: 2,
-      name: 'Normal User',
-      email: 'normaluser@example.com',
-      role: 'normal-user',
-      permissions: ['viewProfile', 'editProfile']
-    };
-
-    // 生成 JWT
-    const token = jwt.sign(user, 'your-secret-key', { expiresIn: '1h' });
-
-    // 设置 cookie
-    setCookie(event, 'token', token, {
-      httpOnly: true,
-      maxAge: 3600,
-      path: '/'
+  } catch (error) {
+    // ✅ 确保错误响应也是 JSON
+    return send(event, JSON.stringify({
+      error: error.message || 'Internal Server Error',
+    }), {
+      statusCode: error.statusCode || 500,
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
-    return user;
   }
-
-  console.log('body:', body);
-  throw createError({
-    statusCode: 401,
-    statusMessage: '认证失败，无效的凭证'
-  });
 });
+function validateUser(email: string, password: string) {
+  const users = {
+    'admin@example.com': { id: 1, role: 'super-admin' },
+    'normaluser@example.com': { id: 2, role: 'normal-user' }
+  };
+  return users[email]?.password === password? users[email] : null;
+}

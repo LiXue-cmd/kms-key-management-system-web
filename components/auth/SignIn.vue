@@ -19,35 +19,52 @@ const isLoading = ref(false);
 
 // SignIn.vue
 const onSubmit = async () => {
-  isLoading.value = true;
-  setUser({
-    id: 1,
-      name: 'Admin User',
-      email: 'admin@example.com',
-      role: 'admin',
-      permissions: ['manageUsers', 'managePosts', 'accessDashboard']
-  });
-  await nextTick();//等待状态更新
-  router.push("/");
-  return
+  isLoading.value = true;  
   try {
-    // 使用 axios 发起 POST 请求
-    const response = await axios.post("/api/login", {
-      email: email.value,
-      password: password.value,
-    });
-    alert("response", response);
-    // const user = response.data;
-    // // 设置用户信息到授权模块
-    // setUser(user);
+    const response = await axios.post(
+      "/api/login",
+      {
+        email: email.value,
+        password: password.value,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-    // isLoading.value = false;
-    // 重定向到首页或之前的页面
+    console.log("Login response - Status:", response.status);
+    console.log("Login response - Headers:", response.headers);
+    console.log("Login response - Data:", response.data);
+
+    // 验证响应是否为JSON
+    if (
+      typeof response.data === "string" &&
+      response.data.includes("<!DOCTYPE html>")
+    ) {
+      throw new Error("服务器返回了HTML页面，而非JSON数据");
+    }
+
+    const user = response.data;
+    setUser(user);
+
+    isLoading.value = false;
+    await nextTick();//等待状态更新
     router.push("/");
   } catch (err: any) {
-    alert("err", err.code,err.response.status);
+    console.error("Login error:", err);
+    console.error("Error response:", err.response?.data);
+
+    if (err.code === "ECONNABORTED") {
+      error.value = "网络连接超时，请检查网络连接";
+    } else {
+      error.value =
+        err.response?.data?.message || err.message || "登录过程中发生错误";
+    }
+
     isLoading.value = false;
-    error.value = err.response?.data?.message || "登录过程中发生错误";
+    alert(`登录失败: ${error.value}`);
   }
 };
 </script>

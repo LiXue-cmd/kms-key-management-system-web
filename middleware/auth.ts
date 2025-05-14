@@ -1,22 +1,20 @@
-// 路由守卫，在路由跳转时，检查用户是否登录以及是否具备管理员权限
 // middleware/auth.ts
 export default defineNuxtRouteMiddleware((to, from) => {
-  const { user } = useAuthorization();
-  // console.log('User in middleware:', user.value); // 添加日志确认用户信息
-  // console.log('to:', to); // 添加日志确认用户信息
-  // alert(!user.value);
-  // alert('====',to);
-  // 如果用户未登录且访问需要认证的页面
-  if (!user.value && to.meta.requiresAuth) {
-    // 避免无限重定向
-    if (to.path === '/login') {
-      return;
+    const { user } = useAuthorization();
+
+    console.log('当前用户信息:', user.value);
+    console.log('目标路由元信息:', to.meta);
+
+    if (!user.value && to.meta.requiresAuth) {
+        if (to.path === '/login') {
+            return;
+        }
+        console.log('用户未登录，重定向到登录页面');
+        return navigateTo('/login');
     }
-    return navigateTo('/login');
-  }
-  
-  // 检查管理员权限
-  if (to.meta.requiresAdmin && user.value?.role !== 'admin') {
-    return navigateTo('/');
-  }
+
+    if (to.meta.requiresAdmin && user.value?.role!== 'admin') {
+        console.log('用户不具备管理员权限，重定向到首页');
+        return navigateTo('/');
+    }
 });

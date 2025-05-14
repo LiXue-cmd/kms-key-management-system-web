@@ -59,7 +59,7 @@ definePageMeta({
   requiresAuth: true,
   requiresAdmin: true,
   auth: {
-    roles: ['admin'], // 仅允许管理员访问
+    roles: ['surper-admin'], // 仅允许管理员访问
     redirect: '/login'
   }
 })
