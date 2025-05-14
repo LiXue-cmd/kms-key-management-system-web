@@ -31,6 +31,7 @@ export default defineEventHandler(async (event) => {
       path: '/'
     });
 
+alert('登录成功',user)
     return user;
   } else if (email === 'normaluser@example.com' && password === 'password') {
     // 模拟普通用户数据
@@ -51,7 +52,6 @@ export default defineEventHandler(async (event) => {
       maxAge: 3600,
       path: '/'
     });
-alert('登录成功',user)
     return user;
   }
 

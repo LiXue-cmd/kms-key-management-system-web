@@ -3,6 +3,8 @@
 export default defineNuxtRouteMiddleware((to, from) => {
   const { user } = useAuthorization();
   
+  console.log('User in middleware:', user.value); // 添加日志确认用户信息
+  
   // 如果用户未登录且访问需要认证的页面
   if (!user.value && to.meta.requiresAuth) {
     // 避免无限重定向

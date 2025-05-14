@@ -6,6 +6,9 @@ import PasswordInput from '~/components/PasswordInput.vue'
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthorization } from '~/composables/useAuthorization';
+// import axios from 'axios'; // 引入 axios
+
+import axios from '~/utils/axios'; // 使用自定义的 axios 实例
 
 const email = ref('');
 const password = ref('');
@@ -18,32 +21,23 @@ const isLoading = ref(false)
 const onSubmit = async () => {
   isLoading.value = true;
   try {
-    // 调用登录API
-    const response = await fetch('/api/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email: email.value, password: password.value }),
+    // 使用 axios 发起 POST 请求
+    const response = await axios.post('/api/login', {
+      email: email.value,
+      password: password.value
     });
-alert(response.ok)
-    if (response.ok === false) {
-      isLoading.value = false;
-      throw new Error('登录失败，请检查凭证');
-    }
-alert('response',response)
-    const user = await response.json();
-alert(user)
+alert('response',response.data)
+    const user = response.data;
     // 设置用户信息到授权模块
     setUser(user);
-    console.log('User set:', user); // 添加日志确认用户信息
 
     isLoading.value = false;
     // 重定向到首页或之前的页面
-    // router.push('/');
+    router.push('/');
   } catch (err: any) {
+    alert('err',err.response?.data?.message)
     isLoading.value = false;
-    error.value = err.message || '登录过程中发生错误';
+    error.value = err.response?.data?.message || '登录过程中发生错误';
   }
 }
 </script>
