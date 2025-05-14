@@ -19,7 +19,7 @@ const isLoading = ref(false);
 
 // SignIn.vue
 const onSubmit = async () => {
-  isLoading.value = true;  
+  isLoading.value = true;
   try {
     const response = await axios.post(
       "/api/login",
@@ -29,7 +29,7 @@ const onSubmit = async () => {
       },
       {
         headers: {
-          "Content-Type": "application/json",
+          "content-type": "application/json",
         },
       }
     );
@@ -50,7 +50,7 @@ const onSubmit = async () => {
     setUser(user);
 
     isLoading.value = false;
-    await nextTick();//等待状态更新
+    await nextTick(); //等待状态更新
     router.push("/");
   } catch (err: any) {
     console.error("Login error:", err);
