@@ -38,6 +38,7 @@ const onSubmit = async () => {
     // 重定向到首页或之前的页面
     router.push('/');
   } catch (err: any) {
+    console.log('err',err)
     isLoading.value = false;
     error.value = err.message || '登录过程中发生错误';
   }
