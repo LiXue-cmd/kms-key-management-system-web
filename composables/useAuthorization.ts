@@ -18,9 +18,11 @@ import { useState } from '#app'
 import type { Ref } from 'vue'
 
 interface User {
-  id: number
-  role: string
-  permissions: string[]
+  id: number,
+  name: string,
+  email: string,
+  role: string,
+  permissions: string[],
 }
 
 export const useAuthorization = () => {
@@ -39,6 +41,7 @@ export const useAuthorization = () => {
 
   // 设置用户信息
   const setUser = (newUser: User) => {
+    console.log('setUser', newUser)
     user.value = newUser
   }
 

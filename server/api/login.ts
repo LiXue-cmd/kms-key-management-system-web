@@ -5,9 +5,11 @@ import jwt from 'jsonwebtoken';
 
 export default defineEventHandler(async (event) => {
   // 使用 console.log 替换 alert
-  console.log('login', event); 
+  console.log('login', event);
   const body = await readBody(event);
   const { email, password } = body;
+  alert('email', email)
+  alert('password', password)
   console.log('Received email:', email, 'password:', password);
 
   // 实际项目中应查询数据库或调用认证服务
@@ -31,7 +33,7 @@ export default defineEventHandler(async (event) => {
       path: '/'
     });
 
-alert('登录成功',user)
+    alert('登录成功', user)
     return user;
   } else if (email === 'normaluser@example.com' && password === 'password') {
     // 模拟普通用户数据
