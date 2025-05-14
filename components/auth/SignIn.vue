@@ -15,10 +15,10 @@ const isLoading = ref(false);
 
 const onSubmit = async () => {
   isLoading.value = true;
-  const baseUrl = window.location.origin;
-  const userUrl = `${baseUrl}/api/login`;
+  // const baseUrl = window.location.origin;
+  // const userUrl = `${baseUrl}/api/login`;
   try {
-    const response = await fetch(userUrl, {
+    const response = await fetch("/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -28,7 +28,13 @@ const onSubmit = async () => {
 
     if (!response.ok) {
       isLoading.value = false;
-      throw new Error("登录失败，请检查凭证");
+      let errorMessage = "登录失败，请检查凭证";
+      if (response.status === 401) {
+        errorMessage = "账号或密码错误";
+      } else if (response.status === 500) {
+        errorMessage = "服务器内部错误，请稍后再试";
+      }
+      throw new Error(errorMessage);
     }
 
     let user;
@@ -38,15 +44,14 @@ const onSubmit = async () => {
       throw new Error("解析服务器响应数据失败");
     }
 
-    console.log("user", user);
     // 设置用户信息到授权模块
     setUser(user);
 
     isLoading.value = false;
     // 重定向到首页或之前的页面
-    // router.push('/');
+    router.push("/");
   } catch (err: any) {
-    console.log("err", err);
+    alert("登录请求出错:", err.message);
     isLoading.value = false;
     error.value = err.message || "登录过程中发生错误";
   }

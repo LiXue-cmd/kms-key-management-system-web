@@ -10,6 +10,14 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const route = useRoute();
   const token = useCookie('token');
 
+  // 定义登录页的路径数组，可根据实际情况添加更多登录页路径
+  const loginPaths = ['/login', '/login-basic']; 
+
+  // 检查当前路径是否为登录页
+  if (loginPaths.includes(route.path)) {
+    return;
+  }
+
   try {
     const { data: user, error } = await useFetch('/api/user', {
       headers: {
