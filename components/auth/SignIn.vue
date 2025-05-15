@@ -98,7 +98,7 @@ const onSubmit = async () => {
 
     isLoading.value = false;
     await nextTick();
-    // router.push("/");
+    router.push("/");
   } catch (err: any) {
     console.error("Login error:", err);
     console.error("Error response:", err.response?.data);

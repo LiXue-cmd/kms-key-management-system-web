@@ -19,17 +19,16 @@ export default defineNuxtConfig({
   authorization: {
     // 角色和权限配置
     roles: {
-      admin: ['manageUsers', 'managePosts'],
-      user: ['viewProfile', 'editProfile'],
-      guest: []
+      'super-admin': ['manageUsers', 'managePosts', 'accessDashboard', 'manageAllSettings'],
+      'normal-user': ['viewProfile', 'editProfile']
     },
     // 默认角色
-    defaultRole: 'guest',
+    defaultRole: 'super-admin',
     // 重定向配置
-    redirect: {
-      login: '/login',
-      home: '/'
-    }
+    // redirect: {
+    //   login: '/login',
+    //   home: '/'
+    // }
   },
 
   // 应用配置
@@ -82,7 +81,7 @@ export default defineNuxtConfig({
   // 路由规则配置
   routeRules: {
     '/components': { redirect: '/components/accordion' },
-    '/settings': { redirect: '/settings/profile' },
+    '/settings': { redirect: '/settings/profile' }
   },
 
   // 自动导入配置

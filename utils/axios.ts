@@ -15,6 +15,7 @@ instance.interceptors.request.use(config => {
 instance.interceptors.response.use(
   response => {
     console.log('Response headers:', response.headers);
+    // response.headers['content-type'] = 'application/json';
     return response;
   },
   error => {

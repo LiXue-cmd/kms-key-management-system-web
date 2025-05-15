@@ -13,7 +13,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
         return navigateTo('/login');
     }
 
-    if (to.meta.requiresAdmin && user.value?.role!== 'admin') {
+    if (to.meta.requiresAdmin && user.value?.role!== 'super-admin') {
         console.log('用户不具备管理员权限，重定向到首页');
         return navigateTo('/');
     }

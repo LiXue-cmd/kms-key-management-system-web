@@ -1,14 +1,17 @@
-// server/api/login.post.ts
+// server/api/login.ts
 import { createError, readBody, setCookie, send } from 'h3';
 import jwt from 'jsonwebtoken';
 
 export default defineEventHandler(async (event) => {
   console.log('Request headers:', event.node.req.headers);
+  const { res } = event.node;
+  res.setHeader('Content-Type', 'application/json');
+
+  // return { message: 'This is a JSON response' };
   try {
     const { email, password } = await readBody(event);
-    console.log('Received email:', email, 'password:', password);
     const user = validateUser(email, password);
-
+    console.log('User:', user);
     if (!user) {
       throw createError({
         statusCode: 401,
@@ -19,29 +22,29 @@ export default defineEventHandler(async (event) => {
     const token = jwt.sign(user, 'your-secret-key', { expiresIn: '1h' });
     setCookie(event, 'token', token, { httpOnly: true, maxAge: 3600 });
 
-    const responseData = JSON.stringify(user);
-    const responseOptions = {
-      statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    };
-    console.log('Response headers:', responseOptions.headers);
-    console.log('Response data:', responseData);
-    return send(event, responseData, responseOptions);
+    // const responseData = JSON.stringify(user);
+    // const responseOptions = {
+    //   statusCode: 200,
+    //   headers: {
+    //     'content-type': 'application/json',
+    //   }
+    // };
+    // console.log('Response headers:', responseOptions.headers);
+    // return send(event, responseData, responseOptions);
+    return user;
   } catch (error) {
     const errorResponse = JSON.stringify({
       error: error.message || 'Internal Server Error',
     });
-    const errorOptions = {
-      statusCode: error.statusCode || 500,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-    console.log('Error response headers:', errorOptions.headers);
-    console.log('Error response data:', errorResponse);
-    return send(event, errorResponse, errorOptions);
+    // const errorOptions = {
+    //   statusCode: error.statusCode || 500,
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    // };
+    // console.log('Error response headers:', errorOptions.headers);
+    // return send(event, errorResponse, errorOptions);
+    return errorResponse
   }
 });
 
