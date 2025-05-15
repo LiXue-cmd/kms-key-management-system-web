@@ -1,7 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  // 启用 Nuxt DevTools
   devtools: { enabled: true },
 
+  // 引入的 Nuxt 模块
   modules: [
     '@unocss/nuxt',
     'shadcn-nuxt',
@@ -13,22 +15,35 @@ export default defineNuxtConfig({
     'nuxt-authorization',
   ],
 
+  // 授权配置
   authorization: {
-    // 配置选项（可选）
+    // 角色和权限配置
     roles: {
       admin: ['manageUsers', 'managePosts'],
       user: ['viewProfile', 'editProfile'],
       guest: []
     },
+    // 默认角色
     defaultRole: 'guest',
+    // 重定向配置
     redirect: {
       login: '/login',
       home: '/'
     }
   },
+
+  // 应用配置
   app: {
-    middleware: ['auth'] // 改为连字符形式
-    // middleware: ['auth-server'] // 改为连字符形式
+    // 应用中间件，可根据需求调整
+    // middleware: ['auth', 'auth-server']
+  },
+
+  // 运行时配置
+  runtimeConfig: {
+    public: {
+      // API 基础路径
+      apiBase: '/api'
+    }
   },
 
   // 开发环境下的代理配置
@@ -40,42 +55,43 @@ export default defineNuxtConfig({
       },
     },
   },
-  
+
+  // 全局 CSS 文件
   css: [
     '@unocss/reset/tailwind.css',
   ],
 
+  // 颜色模式配置
   colorMode: {
     classSuffix: '',
   },
 
+  // 功能特性配置
   features: {
-    // For UnoCSS
+    // 禁用内联样式（用于 UnoCSS）
     inlineStyles: false,
   },
 
+  // ESLint 配置
   eslint: {
     config: {
       standalone: false,
     },
   },
 
+  // 路由规则配置
   routeRules: {
     '/components': { redirect: '/components/accordion' },
     '/settings': { redirect: '/settings/profile' },
-
-    //  '/': { redirect: '/login' },
-    // '/login': { redirect: '/', condition: (to, from) => {
-    //   const { user } = useAuthorization()
-    //   return user
-    // } }
   },
 
+  // 自动导入配置
   imports: {
     dirs: [
       './lib',
     ],
   },
 
+  // 兼容性日期配置
   compatibilityDate: '2024-12-14',
 })

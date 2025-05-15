@@ -54,6 +54,7 @@
     "axios": "^1.9.0",
     "embla-carousel": "^8.5.2",
     "embla-carousel-vue": "^8.5.2",
+    "h3": "^1.15.0",
     "jsonwebtoken": "^9.0.2",
     "nuxt-authorization": "^0.3.4"
   },

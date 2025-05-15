@@ -1,4 +1,4 @@
-// server/api/login.ts
+// server/api/login.post.ts
 import { createError, readBody, setCookie, send } from 'h3';
 import jwt from 'jsonwebtoken';
 
@@ -6,6 +6,7 @@ export default defineEventHandler(async (event) => {
   console.log('Request headers:', event.node.req.headers);
   try {
     const { email, password } = await readBody(event);
+    console.log('Received email:', email, 'password:', password);
     const user = validateUser(email, password);
 
     if (!user) {
@@ -26,6 +27,7 @@ export default defineEventHandler(async (event) => {
       }
     };
     console.log('Response headers:', responseOptions.headers);
+    console.log('Response data:', responseData);
     return send(event, responseData, responseOptions);
   } catch (error) {
     const errorResponse = JSON.stringify({
@@ -38,13 +40,15 @@ export default defineEventHandler(async (event) => {
       },
     };
     console.log('Error response headers:', errorOptions.headers);
+    console.log('Error response data:', errorResponse);
     return send(event, errorResponse, errorOptions);
   }
 });
+
 function validateUser(email: string, password: string) {
   const users = {
     'admin@example.com': { id: 1, role: 'super-admin', password: 'adminpassword' },
     'normaluser@example.com': { id: 2, role: 'normal-user', password: 'normalpassword' }
   };
-  return users[email]?.password === password? users[email] : null;
+  return users[email]?.password === password ? users[email] : null;
 }

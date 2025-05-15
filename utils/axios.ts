@@ -2,19 +2,35 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: '/', // 设置基础 URL
-  timeout: 10000 // 设置超时时间为 10 秒
+  // baseURL: 'http://localhost:3000/api',
+  baseURL: '/api',
+  timeout: 10000
 });
-// 检查请求拦截器
-axios.interceptors.request.use(config => {
+
+instance.interceptors.request.use(config => {
   console.log('Request headers:', config.headers);
   return config;
 });
 
-// 检查响应拦截器
-axios.interceptors.response.use(response => {
-  console.log('Response headers:', response.headers);
-  return response;
-});
+instance.interceptors.response.use(
+  response => {
+    console.log('Response headers:', response.headers);
+    return response;
+  },
+  error => {
+    console.error('Axios response error:', error);
+
+    if (error.response?.status === 401) {
+      // 可以在这里添加自动登出逻辑
+      const { clearUser } = useAuthorization(); // 假设 useAuthorization 提供 clearUser 方法
+      clearUser();
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+// 引入 useAuthorization
+import { useAuthorization } from '~/composables/useAuthorization';
 
 export default instance;
