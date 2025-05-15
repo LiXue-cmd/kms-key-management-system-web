@@ -90,3 +90,5 @@ export const navMenuBottom: NavMenuItems = [
     link: 'https://github.com/dianprata/nuxt-shadcn-dashboard'
   }
 ];
+
+export const navMenu = []
